@@ -109,8 +109,8 @@ public class UploadVideoController extends BaseServiceImpl implements BaseServic
                         break;
                     }
 
-//                    String filepath = "F:\\eclipse_workplace\\tinymooc\\src\\main\\webapp\\resource\\video";
-                    String filepath = "D:\\GitHub\\TinyMooc\\src\\main\\webapp\\resource\\video";
+//              
+                    String filepath = request.getSession().getServletContext().getRealPath("/")+"resource/video";
 
                     //		System.out.println("filepath =====" + filepath);
                     //		String filename="";

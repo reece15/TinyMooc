@@ -16,7 +16,6 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import com.marswork.core.exceptions.config.PropertiesNotFoundException;
 
 public class FileUploadUtils
 {
@@ -96,7 +95,7 @@ public class FileUploadUtils
   }
 
   public static final void DelFile(HttpServletRequest request, String filepath)
-    throws PropertiesNotFoundException
+   
   {
     String readPath ="";
     String contextPath = "";

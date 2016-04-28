@@ -69,7 +69,7 @@ public class AdminController {
                            DetachedCriteria dc = DetachedCriteria.forClass(Course.class);
             Disjunction disjuncteTitle = Restrictions.disjunction();
             disjuncteTitle.add(Restrictions.eq("courseId","!@#$%^&*()"));
-              Set<Course> courseSet =  new HashSet<>();
+              Set<Course> courseSet =  new HashSet<Course>();
 
 
             //将课时想光的课程搜索出来
@@ -84,7 +84,7 @@ public class AdminController {
                     courseSet.add(course) ;
                 }
             }
-            List<Course> list2 = new LinkedList<>();
+            List<Course> list2 = new LinkedList<Course>();
             list2.addAll(courseSet);
             courseSet.clear();
 

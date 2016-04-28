@@ -32,6 +32,7 @@ import org.apache.lucene.search.highlight.SimpleFragmenter;
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 
 
@@ -40,10 +41,12 @@ import org.apache.lucene.store.FSDirectory;
 
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Component
+@Service
 public class CourseServiceImpl extends BaseServiceImpl implements CourseService {
 
 	@Override
@@ -63,7 +66,7 @@ public class CourseServiceImpl extends BaseServiceImpl implements CourseService 
 	public double queryGrade(String ObjId) {
 		// TODO Auto-generated method stub
         String sql="select avg(mark) from Grade where GRADE_OBJECT='"+ObjId+"'";
-		double avgGrade=(double) getCurrentSession().createQuery(sql).uniqueResult();
+		double avgGrade=(Double) getCurrentSession().createQuery(sql).uniqueResult();
 
 		double userGrade = avgGrade+4.9;
 
@@ -82,16 +85,18 @@ public class CourseServiceImpl extends BaseServiceImpl implements CourseService 
     private final String INDEXPATH = "d:\\search\\index";
 
      //1、字符串创建内存索引
-    private Analyzer analyzer = new StandardAnalyzer();
+    private Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
 
     public List<Course> getCourses(String query) {
-
+    	Directory directory=null;
+    	
         try{
+        	directory=FSDirectory.open(new File(INDEXPATH));
 //            String path = req.getSession().getServletContext().getRealPath("/");
               System.out.println("寻求index合适路径：" + indexTest);
             List<Course> qlist = new ArrayList<Course>();
 
-            IndexSearcher indexSearcher = new IndexSearcher(INDEXPATH);
+            IndexSearcher indexSearcher = new IndexSearcher(directory);
 
 //		 System.out.println("rootPath:" + rootPath);
             //QueryParser parser = new QueryParser(fieldName, analyzer); //单 key 搜索
@@ -101,7 +106,7 @@ public class CourseServiceImpl extends BaseServiceImpl implements CourseService 
 
             //下面的是进行title,content 两个范围内进行收索. SHOULD 表示OR
             BooleanClause.Occur[] clauses = { BooleanClause.Occur.SHOULD,BooleanClause.Occur.SHOULD };
-            Query queryOBJ = MultiFieldQueryParser.parse(query, new String[]{"courseIntro","courseTitle"}, clauses, new StandardAnalyzer());//parser.parse(query);
+            Query queryOBJ = MultiFieldQueryParser.parse(Version.LUCENE_30, query, new String[]{"courseIntro","courseTitle"}, clauses, new StandardAnalyzer(Version.LUCENE_30));//parser.parse(query);
             Filter filter = null;
 
             //################# 搜索相似度最高的记录 ###################
@@ -173,7 +178,7 @@ public class CourseServiceImpl extends BaseServiceImpl implements CourseService 
 
         try
         {
-            Directory directory = FSDirectory.getDirectory(INDEXPATH);
+            Directory directory = FSDirectory.open(new File(INDEXPATH));
             IndexWriter indexWriter = new IndexWriter(directory, analyzer ,true, IndexWriter.MaxFieldLength.LIMITED);
 
             long begin = new Date().getTime();
@@ -196,9 +201,9 @@ public class CourseServiceImpl extends BaseServiceImpl implements CourseService 
 //                System.out.println("***" + type);
                 doc.add(new Field("courseIntro", courseIntro, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES));
                 doc.add(new Field("courseTitle", courseTitle, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES));
-                doc.add(new Field("courseId", courseId, Field.Store.COMPRESS,Field.Index.NO));
-                doc.add(new Field("type", type, Field.Store.COMPRESS,Field.Index.NO));
-                doc.add(new Field("courseState", courseState, Field.Store.COMPRESS,Field.Index.NO));
+                doc.add(new Field("courseId", courseId, Field.Store.YES,Field.Index.NO));
+                doc.add(new Field("type", type, Field.Store.YES,Field.Index.NO));
+                doc.add(new Field("courseState", courseState, Field.Store.YES,Field.Index.NO));
           //      doc.add(new Field("course", course1, Field.Store.COMPRESS,Field.Index.NO));
 
                 indexWriter.addDocument(doc);

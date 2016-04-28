@@ -71,8 +71,8 @@ public class LoginController {
             // FIXME
             System.out.println("========credit=====" + credit);
             Level level = userService.getUserLevel(credit);
-            System.out.println("===level===" + level.getLv());
-            // FIXME
+ //           System.out.println("===level===" + level.getLv());
+            // FIXME 这儿没有判断null
             //log.info("====credit={}===", credit);
 
             // 封装数据

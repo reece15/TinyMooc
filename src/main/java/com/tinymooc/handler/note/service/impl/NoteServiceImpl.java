@@ -30,7 +30,7 @@ public class NoteServiceImpl extends BaseServiceImpl implements NoteService {
 	public double queryGrade(String ObjId) {
 		// TODO Auto-generated method stub
 		String sql="select avg(mark) from grade where GRADE_OBJECT='"+ObjId+"'";
-		double avgGrade=(double) getCurrentSession().createQuery(sql).uniqueResult();
+		double avgGrade=(Double) getCurrentSession().createQuery(sql).uniqueResult();
 		
 		double a=(Math.round(avgGrade*10+5))/10;
 		return a;

@@ -55,7 +55,7 @@ public class HomePageController {
      * @param request
      * @return ModelAndView
      */
-    @RequestMapping("turnToHomePage.htm")
+    @RequestMapping("/turnToHomePage.htm")
     public ModelAndView turnToHomePage(HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
         //热门课程
@@ -68,7 +68,7 @@ public class HomePageController {
         // FIXME
         System.out.println("=======未登录hotCourseListTemp.size()===========" + hotCourseListTemp.size());
 
-        List<UserCourse> hotCourseList = new ArrayList<>();
+        List<UserCourse> hotCourseList = new ArrayList<UserCourse>();
         for (int i = 0; i < hotCourseListTemp.size(); i++) {
             Course course = hotCourseListTemp.get(i);
             DetachedCriteria detachedCriteria = DetachedCriteria.forClass(UserCourse.class);
@@ -94,7 +94,7 @@ public class HomePageController {
         // FIXME
         System.out.println("=======未登录newCourseListTemp.size()===========" + newCourseListTemp.size());
 
-        List<UserCourse> newCourseList = new ArrayList<>();
+        List<UserCourse> newCourseList = new ArrayList<UserCourse>();
         for (int i = 0; i < newCourseListTemp.size(); i++) {
             Course course = newCourseListTemp.get(i);
             System.out.println("*********" + course.getCourseTitle() + "**********");
@@ -164,7 +164,8 @@ public class HomePageController {
             System.out.println("========credit=====" + credit);
 
             Level level = userService.getUserLevel(credit);
-            System.out.println("===level===" + level.getLv());
+//FIXME NULL未处理
+            //            System.out.println("===level===" + level.getLv());
 
             return new ModelAndView("/homePage/userHomePage", "level", level);
         }
@@ -195,7 +196,8 @@ public class HomePageController {
             System.out.println("========credit=====" + credit);
 
             Level level = userService.getUserLevel(credit);
-            System.out.println("===level===" + level.getLv());
+//FIXME NULL
+//            System.out.println("===level===" + level.getLv());
 
             // FIXME
             String sessionId = (String) request.getSession().getAttribute("userId");
@@ -214,7 +216,7 @@ public class HomePageController {
             dCriteriaCourse.add(Restrictions.isNull("course"));
             List<Course> courseList1 = userService.queryMaxNumOfCondition(Course.class, dCriteriaCourse, 6);
 
-            List<UserCourse> hotCourseList = new ArrayList<>();
+            List<UserCourse> hotCourseList = new ArrayList<UserCourse>();
             for (int i = 0; i < courseList1.size(); i++) {
                 Course course = courseList1.get(i);
                 DetachedCriteria dCriteriaUserCourse = DetachedCriteria.forClass(UserCourse.class);

@@ -25,7 +25,6 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.marswork.core.exceptions.messaging.MarsException;
 
 @Controller
 public class FavoriteController {
@@ -49,7 +48,7 @@ public class FavoriteController {
 //	}
 
     @RequestMapping("createFavorite.htm")
-    public void createFavorite(HttpServletRequest req, HttpServletResponse res) throws MarsException, IOException {
+    public void createFavorite(HttpServletRequest req, HttpServletResponse res) throws IOException {
         // FIXME
         System.out.println("================createFavorite.htm被执行==============");
         PrintWriter pw = res.getWriter();
@@ -85,7 +84,7 @@ public class FavoriteController {
 
     @SuppressWarnings("unchecked")
     @RequestMapping("myFavorite.htm")
-    public ModelAndView myFavotite(HttpServletRequest req, HttpServletResponse res) throws MarsException {
+    public ModelAndView myFavotite(HttpServletRequest req, HttpServletResponse res)  {
 
         User user = (User) req.getSession().getAttribute("user");
         DetachedCriteria dCriteria = DetachedCriteria.forClass(Favorite.class)
@@ -100,7 +99,7 @@ public class FavoriteController {
     }
 
     @RequestMapping("deleteFavorite.htm")
-    public ModelAndView ddeleteFavotite(HttpServletRequest req, HttpServletResponse res) throws MarsException {
+    public ModelAndView ddeleteFavotite(HttpServletRequest req, HttpServletResponse res)  {
 
         String favoriteId = ServletRequestUtils.getStringParameter(req, "favoriteId", "");
         Favorite favorite = favoriteService.findById(Favorite.class, favoriteId);
