@@ -19,6 +19,9 @@ import com.tinymooc.handler.resource.service.ResourceService;
 import com.tinymooc.handler.user.service.UserService;
 import com.tinymooc.handler.video.service.VideoService;
 import com.tinymooc.util.UUIDGenerator;
+
+import org.apache.commons.codec.binary.StringUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -203,7 +206,7 @@ public class CourseController {
         System.out.println("========credit=====" + credit);
 
         Level myLevel = userService.getUserLevel(credit);
-        System.out.println("===myLevel===" + myLevel.getLv());
+//        System.out.println("===myLevel===" + myLevel.getLv());
 
         req.setAttribute("myLevel", myLevel);
         req.setAttribute("myCreatedCourseList", myCreatedCourseList);
@@ -634,9 +637,17 @@ public class CourseController {
     @CheckAuthority(name = "回复话题")
     @RequestMapping("createReply.htm")
     public ModelAndView createReply(HttpServletRequest req, HttpServletResponse res) {
-        String courseTimeId = ServletRequestUtils.getStringParameter(req, "courseTimeId", "");
-        String content = ServletRequestUtils.getStringParameter(req, "content", "");
-        String parentId = ServletRequestUtils.getStringParameter(req, "parentId", "");
+        String courseTimeId = StringEscapeUtils.escapeHtml(ServletRequestUtils.getStringParameter(req, "courseTimeId", ""));
+        String content = StringEscapeUtils.escapeHtml(ServletRequestUtils.getStringParameter(req, "content", ""));
+        String parentId = StringEscapeUtils.escapeHtml(ServletRequestUtils.getStringParameter(req, "parentId", ""));
+        String postTime = StringEscapeUtils.escapeHtml(ServletRequestUtils.getStringParameter(req, "postTime", "00:01"));
+        
+        
+        if(postTime.equals("00:00")){
+        	postTime = "00:01";
+        }
+        
+        
         User user = (User) req.getSession().getAttribute("user");
 
         Comment comment = new Comment();
@@ -644,6 +655,7 @@ public class CourseController {
         comment.setCommentDate(new Date());
         comment.setCommentContent(content);
         comment.setCommentObject(courseTimeId);
+        comment.setPostTime(postTime);
         comment.setUser(user);
         comment.setType("课时");
         if (!parentId.equals(null)) {

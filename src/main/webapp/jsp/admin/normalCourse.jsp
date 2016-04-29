@@ -138,7 +138,7 @@ function _search()
 				<div class="row">
 					<div class="span12">						
 						<h4 class="header">通过的课程</h4>
-						<a class="btn success" href="createCoursePage.htm">创建课程</a>
+						
 						<table class="table table-striped sortable" >
 							<thead>
 								<tr>

@@ -3,7 +3,7 @@
   type="WEB"
   name="mymooc"
   id="myeclipse.1461491265124"
-  context-root="/tinymooc"
+  context-root="/"
   j2ee-spec="6.0"
   archive="mymooc.war">
   <attributes>

@@ -28,6 +28,7 @@ public class Comment implements java.io.Serializable {
 
     private String commentId;
     private User user;
+    private String postTime;
     private Comment comment;
     private String type;
     private String commentContent;
@@ -130,6 +131,15 @@ public class Comment implements java.io.Serializable {
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
     }
+
+    @Column(name = "COMMENT_POSTTIME", length = 12)
+	public String getPostTime() {
+		return postTime;
+	}
+
+	public void setPostTime(String postTime) {
+		this.postTime = postTime;
+	}
 
 }
 
