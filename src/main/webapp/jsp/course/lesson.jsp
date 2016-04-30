@@ -20,8 +20,10 @@
 	src="/resource/js/xheditor/xheditor-1.1.9-zh-cn.min.js"></script>
 <link href="/resource/skin/pink.flag/jplayer.pink.flag.css"
 	rel="stylesheet" type="text/css" />
-
+<link href="/resource/jplayer-plugin/css/style.css"
+	rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="/resource/js/jquery.jplayer.min.js"></script>
+<script type="text/javascript" src="/resource/jplayer-plugin/js/jplayer.plugin.danmu.js"></script>
 
 
 <style type="text/css">
@@ -36,155 +38,15 @@
 	margin-left: 0px;
 }
 
-#showDm {
-	height: 100%;
-	width: 100%;
-	padding: 0;
-	margin: 0;
-	position: relative;
-	overflow: hidden;
-	z-index: 4;
-}
 
-#jquery_jplayer_1 img {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	z-index: 1;
-}
-
-#jquery_jplayer_1 video {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	z-index: 1;
-}
-
-#showDm div {
-	font-size: 22px;
-	line-height: 36px;
-	font-weight: 500;
-	color: #fff;
-	position: absolute;
-	white-space:nowrap;   
-	word-break:keep-all;  
-	
-}
-/*.send start*/
-.send {
-	width: 100%;
-	height: 76px;
-	position: absolute;
-	bottom: 90px;
-	left: 0;
-	display: none;
-}
-
-.send .s_fiter {
-	width: 100%;
-	height: 76px;
-	background: #000;
-	position: bottom:0;
-	left: 0;
-	opacity: 0.8;
-	filter: alpha(opacity = 80);
-}
-
-.send .s_con {
-	width: 100%;
-	height: 76px;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 9999;
-	text-align: center;
-	line-height: 76px;
-	padding: 10px;
-}
-
-.send .s_con 
- 			  .s_txt {
-	margin-top: 10px;
-	width: 605px;
-	height: 36px;
-	border-radius: 4px 0 0 4px;
-	border: 1px solid #5bba32;
-	outline: none;
-}
-
-.send .s_con .s_sub {
-	width: 100px;
-	height: 36px;
-	border-radius: 4px 0 0 4px;
-	border: 1px solid #5bba32;
-	outline: none;
-	font-size: 17px;
-	color: #fff;
-	font-family: "微软雅黑";
-	cursor: pointer;
-	background: #65c33d;
-	text-align: center;
-}
-
-.send .s_con .s_sub:hover {
-	background: #3eaf0e;
-}
-
-/*end .send*/
 </style>
 
 <script type="text/javascript">
 		
-		function initDms(){
-			var $msgDiv=$(".said-content");
-			setInterval(function(){
-				for(var i = 0; i < $msgDiv.length; i++){
-					if($(".jp-current-time").text() == $($msgDiv[i]).attr("posttime")){
-						$($msgDiv[i]).attr('posttime','');
-						biubiubiu($($msgDiv[i]).text());
-					}
-				}
-			},1000);		
-		}
-		function xssFilter(val) {
-			val = val.toString();
-			val = val.replace("<", "&lt;");
-			val = val.replace(">", "&gt;");
-			val = val.replace("\"", "&quot;");
-			val = val.replace("'", "&#39;");
-			return val;
-		}
-		function getReandomColor(){
-			var w = ["#ff0000", "#ff0080", "#ff00ff", "#8000ff", "#0000ff", "#0080ff", "#00ffff", "#00ff80", "#00ff00", "#80ff00", "#ffff00", "#ff8000", "#ff0000"];
-			 
-			return w[parseInt(Math.random()*w.length)];
-		}
-		var maxRows = 10;
-		var countDm= 0;
-		var index = 5;
-		//发射弹幕
-		function biubiubiu(texts){
-			var text=xssFilter(texts);
-			var $div=$("<div style='color:"+getReandomColor()+"'>"+text+"</div>");
-		   $div.css("top",""+countDm * $("#showDm").height()/maxRows+"px");
-		   $div.css("left",$("#showDm").width()+"px");
-		   $div.css("z-index",index);
-		   
-		   $("#showDm").append($div);
-			
-			
-		   if(countDm >= maxRows){
-		   		countDm = 0;
-		   }
-			var time=6000;
-			countDm+=1;
-			index++;
-			$div.animate({left:"-"+$div.width()+"px"},time,function(){
-					$div.remove();
-			});
-		}
 		
-		//提交数据
+		
+		
+		
 		function postData(text, parent){
             	<c:if test="${empty user}">
                     alert("登陆后才可以发表回复(づ￣3￣)づ╭❤～");
@@ -241,40 +103,27 @@
 				keyEnabled: true
 			});
 			
-			
-			$("#jquery_jplayer_1").append("<div id='showDm'></div><div class='send'><div class='s_fiter'><div class='s_con'><input type='text' class='s_txt'/><input type='button' sending='false' value='发布评论' class='s_sub'/></div></div></div>");
-			
-			
-			//鼠标点击播放器
-			$("#showDm").click(function(){
-				if($(".send").css("display")=='none'){
-					$(".send").css("display","block");
-				}else{
-					$(".send").css("display","none");
-				}
-				
+			var lists = new Array();
+			var $msgDiv=$(".said-content");
+			for(var i = 0; i < $msgDiv.length; i++){
+				lists.push({
+					content : $($msgDiv[i]).text(),
+					postTime:$($msgDiv[i]).attr("posttime")
+				});
+			}
+			$.fn.simpleDanmu.initDanmu({
+				objectId:"jquery_jplayer_1",
+				list:lists,
+				postData:postData
 			});
 			
-			//init_screen();
 			
 			
-			$(".s_sub").click(function(){
-				
-				if($(this).attr('sending') == 'true'){
-					alert("您提交的太频繁了，3s后再试!");
-					return false;
-				}
-				
-				$(this).attr('sending',"true");
-				setTimeout(function(){
-					$(".s_sub").attr('sending','false');
-				},3000);
-
-			   biubiubiu($(".s_txt").val());
-			   postData($(".s_txt").val());
-			})
-			//初始化弹幕
-			initDms();
+			
+			
+			
+			
+			
 			
             $("#note-open-btn").click(function () {
 
