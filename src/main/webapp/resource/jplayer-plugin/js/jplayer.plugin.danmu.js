@@ -25,7 +25,7 @@
 		 * 默认的参数
 		 */
 		defaultConfig:{
-			
+			height:36,
 			time:5000,
 			timeout:3000,
 		},
@@ -58,18 +58,18 @@
 			});
 			
 
-			
+			var tableDone = new Array();
 			//发射弹幕
-			var point;
 			setInterval(function(){
+				
 				for(var i = 0; i < $.fn.simpleDanmu.defaultConfig.list.length; i++){
 					var currentTime = $player.parent().children('.jp-gui').children('.jp-interface').children('.jp-current-time').text();
 					//alert($.fn.simpleDanmu.defaultConfig.list[i].content+$.fn.simpleDanmu.defaultConfig.list[i].postTime);
 					var danmu = $.fn.simpleDanmu.defaultConfig.list[i];
-					if(currentTime == danmu.postTime && point != danmu){
+					if(currentTime == danmu.postTime && tableDone.indexOf(i) == -1){
 						
 						$.fn.simpleDanmu.sendDanmu.biubiubiu(danmu.content);
-						point = danmu;
+						tableDone.push(i);
 					}	
 				}
 				
@@ -121,7 +121,8 @@
 				var text=$.fn.simpleDanmu.util.xssFilter(texts);
 				var $div=$("<div>"+text+"</div>");
 				
-				$.fn.simpleDanmu.sendDanmu.data.maxRows = $("#"+objectId +" #showDm").height()*0.8/$("#"+objectId +" #showDm div").height() - 1;
+				
+				$.fn.simpleDanmu.sendDanmu.data.maxRows = $("#"+objectId +" #showDm").height()*0.8/$.fn.simpleDanmu.defaultConfig.height;
 				$div.css({
 					"top":($.fn.simpleDanmu.sendDanmu.data.countDm * ($("#"+objectId +" #showDm").height() - $("#"+objectId +" #showDm div").height())*0.8/$.fn.simpleDanmu.sendDanmu.data.maxRows)+"px",
 					"left":$("#"+objectId +" #showDm").width()+"px",
@@ -142,6 +143,7 @@
 				$div.animate({left:"-"+$div.width()+"px"},time,function(){
 						$div.remove();
 				});
+				console.log($.fn.simpleDanmu.sendDanmu.data.countDm+" "+$.fn.simpleDanmu.sendDanmu.data.index +" "+$.fn.simpleDanmu.sendDanmu.data.maxRows);
 			},
 			
 			
